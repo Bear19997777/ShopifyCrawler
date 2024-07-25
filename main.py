@@ -3,10 +3,11 @@ import os
 import binascii 
 import shopify.session 
 import shopify_siteParse as ssp
-import getShopifySite 
+import getShopifySite  as gss
 import remove_overlap
-import websiteScreenShot 
+import websiteScreenShot as wss
 import josonfileSave_0704
+import databaseOp as dbo
 start = False 
 flag = "" 
 
@@ -127,8 +128,18 @@ class ShopifyAuto:
                 print(f"未找到標題為 '{sitename}' 的商品")
         
             
-    def dataParse(self,webtextInfoFile):
-        return ssp.ParseSiteInfo(webtextInfoFile)
+    def downloadNewproduct(self,webtextInfoFile):
+        jsonpath = gss.getshopify_site(15)
+        wss.save_picture(jsonfilePath=jsonpath)
+        wss.remove_empty_dir()
+        jsonpath = wss.wirte_screenshot_success_url()
+        ssp.ParseSiteInfo(jsonpath)
+        dboObj = dbo.ShopifyDatabase()
+        jsondf = dboObj.readJsonFile(jsonpath)
+        newdf = dboObj.delteExistsData(jsondf)
+        dboObj.updateExcel(newdf)
+        
+        
 
             
         
@@ -140,7 +151,7 @@ if __name__ == "__main__":
     execmd = executedict[userinput] 
     if execmd == 1: start = True 
     if start: 
-        getShopifySite.getshopify_site(15)
+        gss.getshopify_site(15)
     if execmd == 2 : start = True 
     if start: 
         oldpath = "./url/old_url.txt"
@@ -148,8 +159,8 @@ if __name__ == "__main__":
         remove_overlap.get_newURL(oldpath=oldpath,NewPath=newpath)
     if execmd == 3 : start = True 
     if start: 
-        websiteScreenShot.save_picture(newpath)
-        websiteScreenShot.wirte_screenshot_success_url()
+        wss.save_picture(newpath)
+        wss.wirte_screenshot_success_url()
     if execmd == 4 : start = True 
     if start : 
         pass 

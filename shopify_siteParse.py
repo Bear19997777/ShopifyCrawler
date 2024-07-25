@@ -24,7 +24,7 @@ def ParseSiteInfo(jsonFile,screenshotdir="./screenshot"):
     with open(jsonFile,"w") as f : 
         json.dump(websitelist,f)
         
-    return websitelist
+    return jsonFile
     
                     
 if __name__ == "__main__":

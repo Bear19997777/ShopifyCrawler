@@ -13,14 +13,15 @@ class ShopifyDatabase:
         return self.__excelData
     
     def updateExcel(self,df:pd.DataFrame):
-        df.to_excel(self.__databasePath,index=False)
-        self.__excelData = df 
+        # df.to_excel(self.__databasePath,index=False)
+        # self.__excelData = df 
+        newdf = pd.concat([df,self.__excelData])
+        newdf.to_excel(self.__databasePath,index=False)
+        self.__excelData = newdf
     
     def readExcelFile(self,path):
         pass 
     
-    def appendData(self,data):
-        pass 
     
     def readJsonFile(self,path):
         pd.read_json(path)
@@ -29,8 +30,14 @@ class ShopifyDatabase:
     def readtxtFile(self,path):
         pass 
     
-    def delteDuplicate(self):
-        pass 
+    def delteExistsData(self,newdf):
+        
+        df_overlap = pd.merge(self.__excelData, newdf, on='name')
+        df_new_unique = newdf[~newdf['name'].isin(df_overlap['name'])]
+        print(df_new_unique)
+        print(f"Total update count: {df_new_unique.shape[0]}")
+        raise Exception
+        return df_new_unique
     
     
     def transferTodataFrame(self,data):
@@ -39,10 +46,11 @@ class ShopifyDatabase:
     
 if __name__ == "__main__":
     db = ShopifyDatabase("./database/database.xlsx" )
-    # ss.ParseSiteInfo("./database/websites_info_0704.json")
-    json_df = db.readJsonFile("./database/websites_info_0704.json")
-    
-    db.updateExcel(json_df)
+    jsonfilepath = "./tempdir/urljsonfile.json"
+    ss.ParseSiteInfo(jsonfilepath)
+    json_df = db.readJsonFile(jsonfilepath)
+    newdf = db.delteExistsData(json_df)
+    db.updateExcel(newdf)
     print(db.GetDatabase())
     # print(jsonfile)
 

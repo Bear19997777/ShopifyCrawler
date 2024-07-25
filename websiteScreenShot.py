@@ -1,7 +1,8 @@
 from playwright.sync_api import sync_playwright
 import os 
 import datetime as dt 
-
+import json 
+from types import * 
 def capture_screenshot(url, picture_path, timeout=60000):
     with sync_playwright() as p:
         browser = p.chromium.launch()
@@ -25,15 +26,16 @@ def capture_screenshot(url, picture_path, timeout=60000):
             print(f"截圖失敗: {e}")
         finally:
             browser.close()
-def save_picture(*,textfile):
+def save_picture(*,jsonfilePath:str):
 
 
 
     count = 0 
 
-    with open(textfile, "r") as file :
-        filelines = file.readlines()
-        for url in filelines:
+    with open(jsonfilePath, "r") as file :
+        websiteInfo = json.load(file)
+        for entry  in websiteInfo:
+            url = entry["url"]
             if not os.path.isdir("screenshot") : os.mkdir("screenshot")
             count += 1
             websitename = url.split("//")[1].split(".")[0]
@@ -60,14 +62,20 @@ def remove_empty_dir():
                 print("移除失敗")            
 
 def wirte_screenshot_success_url():
-    
-    with open(f"new_url_{dt.datetime.now().strftime('%m_%d')}.txt","w+") as f: 
+    websiteInfolist = []
+    jsonpath = r"./tempdir/urljsonfile.json"
+    with open(jsonpath,"w") as f: 
         for dir in os.listdir("./screenshot"):
-            url = f"https://{dir}.myshopify.com\n"
-            print(url)
-            f.write(url)
+            tmpdict = {}
+            url = f"https://{dir}.myshopify.com"
+            tmpdict["url"] = url
+            websiteInfolist.append(tmpdict)
+        json.dump(websiteInfolist,f)
+    return jsonpath
+    
             
         
 if __name__ == "__main__":
-    # remove_empty_dir()
+    save_picture(jsonfilePath="./tempdir/urljsonfile.json")
+    remove_empty_dir()
     wirte_screenshot_success_url()

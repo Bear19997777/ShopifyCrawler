@@ -1,7 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import time
-
+import databaseOp as dbo
+import json
 def google_search(query, num_pages):
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
     urls = []
@@ -31,15 +32,23 @@ def google_search(query, num_pages):
 
 
 def getshopify_site(num_pages):
+    websiteinfolist = [] 
     query = "site:myshopify.com"
     shopify_urls = google_search(query, num_pages)
-    with open("url.txt","w+") as f : 
-        for url in shopify_urls:
-            f.write(url+"\n")
-            print(url+"\n")
+     
+    for url in shopify_urls:
+        tmpdict = {}
+        tmpdict["url"] = url 
+        websiteinfolist.append(tmpdict)
+    
+    with open("./tempdir/urljsonfile.json","w") as f : 
+        json.dump(websiteinfolist,f)
+    print(websiteinfolist)
+    return websiteinfolist 
+
     
 
 
 
 if __name__ == '__main__':
-    getshopify_site(15)
+    getshopify_site(1)
