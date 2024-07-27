@@ -1,5 +1,5 @@
 watting to do : 
-
+issue 001
 1. text file analysis ....done
 2. old version url file merge to database....done 
 3. new data need to automerge to database don't generate text file 
