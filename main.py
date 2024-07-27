@@ -129,7 +129,7 @@ class ShopifyAuto:
         
             
     def downloadNewproduct(self,webtextInfoFile):
-        jsonpath = gss.getshopify_site(15)
+        jsonpath = gss.getshopify_site(1)
         wss.save_picture(jsonfilePath=jsonpath)
         wss.remove_empty_dir()
         jsonpath = wss.wirte_screenshot_success_url()
@@ -148,27 +148,12 @@ class ShopifyAuto:
  
  
 if __name__ == "__main__":
-    execmd = executedict[userinput] 
-    if execmd == 1: start = True 
-    if start: 
-        gss.getshopify_site(15)
-    if execmd == 2 : start = True 
-    if start: 
-        oldpath = "./url/old_url.txt"
-        newpath = "./url/new_url.txt"
-        remove_overlap.get_newURL(oldpath=oldpath,NewPath=newpath)
-    if execmd == 3 : start = True 
-    if start: 
-        wss.save_picture(newpath)
-        wss.wirte_screenshot_success_url()
-    if execmd == 4 : start = True 
-    if start : 
-        pass 
+ 
         # josonfileSave_0704.
 
         
     
-    if execmd == 5 : start = True 
+
     
     if start :
         shopapp = ShopifyAuto("/Users/zhuangjunrong/Documents/Project/shopify/database/websites_info_0704.json")

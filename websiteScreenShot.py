@@ -38,7 +38,7 @@ def save_picture(*,jsonfilePath:str):
             url = entry["url"]
             if not os.path.isdir("screenshot") : os.mkdir("screenshot")
             count += 1
-            websitename = url.split("//")[1].split(".")[0]
+            websitename = str(url.split("//")[1].split(".myshopify")[0]).replace(".","_")
             assert type(websitename ) != type(str),"websitename parse Fail"
             if not os.path.isdir(f"./screenshot/{websitename}"): os.mkdir(f"./screenshot/{websitename}")
             picturepath = os.path.join(f"./screenshot/{websitename}",f"{count}.png")

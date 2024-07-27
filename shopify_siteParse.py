@@ -10,14 +10,13 @@ def ParseSiteInfo(jsonFile,screenshotdir="./screenshot"):
     print(websiteinfo)
     for entry in websiteinfo:
         print(entry)
-        websitename = entry["url"].split("//")[1].split(".")[0]
+        websitename = str(entry["url"].split("//")[1].split(".myshopify")[0]).replace(".","_")
         entry["name"] = websitename #entry 
-        siteName = entry["url"].split("//")[1].split(".")[0]
-        if os.path.exists(f"{screenshotdir}/{siteName}"):
-            imgFileName = os.listdir(f"{screenshotdir}/{siteName}")[0]
-            imgPath = os.path.join(f"{screenshotdir}/{siteName}",imgFileName)
-            
+        if os.path.exists(f"{screenshotdir}/{websitename}"):
+            imgFileName = os.listdir(f"{screenshotdir}/{websitename}")[0]
+            imgPath = os.path.join(f"{screenshotdir}/{websitename}",imgFileName)
             entry["imgPath"] = imgPath
+    
         websitelist.append(entry)
         
     # print(websitelist)

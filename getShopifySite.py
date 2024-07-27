@@ -35,11 +35,13 @@ def getshopify_site(num_pages):
     websiteinfolist = [] 
     query = "site:myshopify.com"
     shopify_urls = google_search(query, num_pages)
-     
+    urllist = [] 
     for url in shopify_urls:
-        tmpdict = {}
-        tmpdict["url"] = url 
-        websiteinfolist.append(tmpdict)
+        if url not in urllist:
+            tmpdict = {}
+            tmpdict["url"] = url 
+            urllist.append(url)
+            websiteinfolist.append(tmpdict)
     
     with open("./tempdir/urljsonfile.json","w") as f : 
         json.dump(websiteinfolist,f)

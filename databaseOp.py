@@ -30,11 +30,13 @@ class ShopifyDatabase:
     def readtxtFile(self,path):
         pass 
     
-    def delteExistsData(self,newdf):
+    def deleteExistsData(self,newdf):
         
         df_overlap = pd.merge(self.__excelData, newdf, on='name')
         df_new_unique = newdf[~newdf['name'].isin(df_overlap['name'])]
         print(df_new_unique)
+        print(f"Origin update ocunt:{newdf.shape[0]}")
+        print(f"overlap count : {df_overlap.shape[0]}")
         print(f"Total update count: {df_new_unique.shape[0]}")
         raise Exception
         return df_new_unique
@@ -49,7 +51,7 @@ if __name__ == "__main__":
     jsonfilepath = "./tempdir/urljsonfile.json"
     ss.ParseSiteInfo(jsonfilepath)
     json_df = db.readJsonFile(jsonfilepath)
-    newdf = db.delteExistsData(json_df)
+    newdf = db.deleteExistsData(json_df)
     db.updateExcel(newdf)
     print(db.GetDatabase())
     # print(jsonfile)
