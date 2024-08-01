@@ -136,8 +136,8 @@ class ShopifyAuto:
         ssp.ParseSiteInfo(jsonpath)
         dboObj = dbo.ShopifyDatabase()
         jsondf = dboObj.readJsonFile(jsonpath)
-        newdf = dboObj.delteExistsData(jsondf)
-        dboObj.updateExcel(newdf)
+        newdf = dboObj.deleteExistsData(jsondf)
+        dboObj.AddNewData(newdf)
         
         
 

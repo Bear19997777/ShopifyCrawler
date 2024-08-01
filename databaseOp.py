@@ -12,12 +12,18 @@ class ShopifyDatabase:
     def GetDatabase(self):
         return self.__excelData
     
-    def updateExcel(self,df:pd.DataFrame):
+    def AddNewData(self,df:pd.DataFrame):
         # df.to_excel(self.__databasePath,index=False)
         # self.__excelData = df 
         newdf = pd.concat([df,self.__excelData])
         newdf.to_excel(self.__databasePath,index=False)
         self.__excelData = newdf
+        
+    def updateDataFrame(self,newdf:pd.DataFrame):
+        newdf.to_excel(self.__databasePath,index=False)
+        self.__excelData = newdf 
+        return self.__excelData 
+    
     
     def readExcelFile(self,path):
         pass 
@@ -38,7 +44,6 @@ class ShopifyDatabase:
         print(f"Origin update ocunt:{newdf.shape[0]}")
         print(f"overlap count : {df_overlap.shape[0]}")
         print(f"Total update count: {df_new_unique.shape[0]}")
-        raise Exception
         return df_new_unique
     
     
