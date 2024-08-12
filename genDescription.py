@@ -5,6 +5,7 @@ import html_text
 from deep_translator import GoogleTranslator
 from llama_index.llms.ollama import Ollama
 import pandas as pd 
+import numpy as np 
 # 定義要獲取的URL
 """
    1.Clothing and Fashion
@@ -28,8 +29,10 @@ categoriesDict = {"1":"Clothing and Fashion",
                   "8":"Specialty Products",
                   "9":"Cultural and Niche Products",
                   "10":"Other"}
-
-
+dbobj = dbo.ShopifyDatabase("./database/database.xlsx")
+count =0
+descriptionupdateID = 0000
+tagupdateID = 0000
 def extractWebsiteText(url):
     # dbobj = dbo.ShopifyDatabase("./database/database.xlsx")
     # dbDf = dbobj.GetDatabase()
@@ -74,17 +77,36 @@ def classifyproductTag(text):
     return result
 
 def assignDescription(row:pd.DataFrame):
+    global count
+    global dbobj
+    count+=1
     url = row["url"]
-    text = extractWebsiteText(url=url)
-    result = summerize(text)
-    print(url)
-    print(f"result:{result}")
-    return result
+    try:
+        text = extractWebsiteText(url=url)
+        print(url)
+        print("start to summrize text")
+        if len(text) !=0 or row["descriptionID"]!=descriptionupdateID:
+            result = summerize(text)
+            row["description"] = result
+            row["descriptionID"] = descriptionupdateID
+            print(url)
+            print(f"result:{result}")
+            return result
+        else:
+            if row["descriptionID"]==descriptionupdateID:
+                return row["description"]
+            else: 
+                return ""
+    except Exception as e:
+        print(e)
+    
+        
 
 def assignTag(row:pd.DataFrame):
     description = row["description"]
     # text = extractWebsiteText(url=url)
     result = classifyproductTag(description)
+    row["tagupdateID"] = tagupdateID
     print(result)
     return result
 def tagReview(row:pd.DataFrame):
@@ -99,10 +121,19 @@ def tagReview(row:pd.DataFrame):
 if __name__ == "__main__":
     dbobj = dbo.ShopifyDatabase("./database/database.xlsx")
     dbDf = dbobj.GetDatabase()
-    dbDf["description"] = dbDf.apply(assignDescription,axis=1)
-    dbDf["tag"] = dbDf.apply(assignTag,axis=1)
-    dbDf["tag"] = dbDf.apply(tagReview,axis=1)
-    updateresult = dbobj.updateDataFrame(dbDf)
+    try : 
+        # print("start to gen description")
+        # dbDf["description"] = dbDf.apply(assignDescription,axis=1)
+        # print("start to gen tag")
+
+        dbDf["tag"] = dbDf.apply(assignTag,axis=1)
+        print("start to review tag")
+        dbDf["tag"] = dbDf.apply(tagReview,axis=1)
+    except Exception as e:
+        print("some issue happen")
+        print(e)
+    finally:
+        updateresult = dbobj.updateDataFrame(dbDf)
     print(updateresult)
     
     

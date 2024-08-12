@@ -45,6 +45,7 @@ def save_picture(*,jsonfilePath:str):
             if not os.path.exists(picturepath):
                 capture_screenshot(url, picturepath)
                 print(f'Screenshot saved to {picturepath}')
+    return jsonfilePath
                 
 def remove_empty_dir():
     for dir in os.listdir("./screenshot"):

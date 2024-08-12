@@ -42,11 +42,10 @@ def getshopify_site(num_pages):
             tmpdict["url"] = url 
             urllist.append(url)
             websiteinfolist.append(tmpdict)
-    
-    with open("./tempdir/urljsonfile.json","w") as f : 
+    jsonfilePath = "./tempdir/urljsonfile.json"
+    with open(jsonfilePath,"w") as f : 
         json.dump(websiteinfolist,f)
-    print(websiteinfolist)
-    return websiteinfolist 
+    return jsonfilePath 
 
     
 
